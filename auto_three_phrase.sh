@@ -47,6 +47,9 @@ echo "▶ Phrase3: $P3"
 echo "▶ Engine: $ENGINE"
 echo "▶ Voice: $VOICE"
 
+# 一時ディレクトリ作成
+mkdir -p tmp
+
 # --- 音声合成 → 1.aiff / 1.mp3 ---
 if [[ "$ENGINE" == "voicevox" ]]; then
   # VOICEVOX使用
@@ -64,33 +67,30 @@ if [[ "$ENGINE" == "voicevox" ]]; then
     curl --http1.1 -s -X POST \
       "http://127.0.0.1:50021/audio_query?text=$TEXT_ENC&speaker=$VOICE" \
       -H "Accept: application/json" \
-      -o "query_$i.json"
+      -o "tmp/query_$i.json"
     
     # synthesis
     curl --http1.1 -s -X POST \
       "http://127.0.0.1:50021/synthesis?speaker=$VOICE" \
       -H "Content-Type: application/json" \
-      --data-binary @"query_$i.json" -o "voice_$i.wav"
+      --data-binary @"tmp/query_$i.json" -o "tmp/voice_$i.wav"
   done
   
   # 3つの音声ファイルを結合（ポーズ付き）
   ffmpeg -y -hide_banner -loglevel error \
-    -i voice_1.wav -i voice_2.wav -i voice_3.wav \
+    -i tmp/voice_1.wav -i tmp/voice_2.wav -i tmp/voice_3.wav \
     -filter_complex "[0]apad=pad_len=48000[0p];[1]apad=pad_len=48000[1p];[0p][1p][2]concat=n=3:v=0:a=1[out]" \
-    -map "[out]" -c:a pcm_s16le temp.wav
+    -map "[out]" -c:a pcm_s16le tmp/temp.wav
   
   # MP3に変換
-  ffmpeg -y -hide_banner -loglevel error -i temp.wav -c:a libmp3lame -b:a 192k 1.mp3
-  
-  # 一時ファイル削除
-  rm -f query_*.json voice_*.wav temp.wav
+  ffmpeg -y -hide_banner -loglevel error -i tmp/temp.wav -c:a libmp3lame -b:a 192k 1.mp3
   
 else
   # say使用（従来通り）
   echo "🎤 Using macOS say (Voice: $VOICE, Rate: $RATE)"
   TEXT="$P1 [[slnc $PAUSE_MS]] $P2 [[slnc $PAUSE_MS]] $P3"
-  say -v "$VOICE" -r "$RATE" -o 1.aiff "$TEXT"
-  ffmpeg -y -hide_banner -loglevel error -i 1.aiff -c:a libmp3lame -b:a 192k 1.mp3
+  say -v "$VOICE" -r "$RATE" -o tmp/1.aiff "$TEXT"
+  ffmpeg -y -hide_banner -loglevel error -i tmp/1.aiff -c:a libmp3lame -b:a 192k 1.mp3
 fi
 
 # 総尺
@@ -98,9 +98,9 @@ DUR="$(ffprobe -v error -show_entries format=duration -of csv=p=0 1.mp3)"
 
 # --- 無音検出（silencedetect）→ 区切り時刻 T1,T2 ---
 ffmpeg -hide_banner -nostats -loglevel info -i 1.mp3 \
-  -af silencedetect=noise=-30dB:d=0.35 -f null - 2> silences.log || true
+  -af silencedetect=noise=-30dB:d=0.35 -f null - 2> tmp/silences.log || true
 
-read T1 T2 < <(grep -oE 'silence_start: [0-9.]+' silences.log | awk '{print $2}' | head -n 2)
+read T1 T2 < <(grep -oE 'silence_start: [0-9.]+' tmp/silences.log | awk '{print $2}' | head -n 2)
 # フォールバック（見つからなければ3等分）
 : "${T1:=$(python3 - <<PY
 d=$DUR
@@ -130,4 +130,8 @@ ffmpeg -y -hide_banner \
   -map "[v]" -map 0:a -c:v libx264 -pix_fmt yuv420p -c:a aac -b:a 192k -shortest "$OUT"
 
 echo "✅ 完成: $OUT"
+
+# クリーンアップ（オプション）
+# デバッグ用に一時ファイルを残す場合は以下の行をコメントアウト
+# rm -rf tmp/
 

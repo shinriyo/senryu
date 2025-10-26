@@ -1,0 +1,19 @@
+# Temporary files
+tmp/
+
+# Audio files
+*.aiff
+*.wav
+*.mp3
+
+# Video files
+*.mp4
+
+# Log files
+*.log
+
+# Query files
+query*.json
+
+# macOS
+.DS_Store
