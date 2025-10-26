@@ -126,7 +126,7 @@ E1="$(esc "$P1")"; E2="$(esc "$P2")"; E3="$(esc "$P3")"
 ffmpeg -y -hide_banner \
   -i 1.mp3 \
   -f lavfi -t "$DUR" -i "color=black:s=1280x720:r=30" \
-  -filter_complex "[1:v]drawtext=font='$FONT':text='$E1':fontsize=$SIZE:fontcolor=white:borderw=3:box=1:boxcolor=black@0.35:x=(w-text_w)/2:y=(h-text_h)/2:enable='between(t,0,$T1)',drawtext=font='$FONT':text='$E2':fontsize=$SIZE:fontcolor=white:borderw=3:box=1:boxcolor=black@0.35:x=(w-text_w)/2:y=(h-text_h)/2:enable='between(t,$T1,$T2)',drawtext=font='$FONT':text='$E3':fontsize=$SIZE:fontcolor=white:borderw=3:box=1:boxcolor=black@0.35:x=(w-text_w)/2:y=(h-text_h)/2:enable='between(t,$T2,$DUR)'[v]" \
+  -filter_complex "[1:v]drawtext=font='$FONT':text='$E1':fontsize=$SIZE:fontcolor=white:borderw=3:box=1:boxcolor=black@0.35:x=(w-text_w)/2:y=(h-text_h)/2:enable='between(t,0,$T1)':alpha='if(lt(t,0.2),min(1,t/0.2),if(gt(t,$T1-0.2),max(0,($T1-t)/0.2),1))',drawtext=font='$FONT':text='$E2':fontsize=$SIZE:fontcolor=white:borderw=3:box=1:boxcolor=black@0.35:x=(w-text_w)/2:y=(h-text_h)/2:enable='between(t,$T1,$T2)':alpha='if(lt(t,$T1+0.2),min(1,(t-$T1)/0.2),if(gt(t,$T2-0.2),max(0,($T2-t)/0.2),1))',drawtext=font='$FONT':text='$E3':fontsize=$SIZE:fontcolor=white:borderw=3:box=1:boxcolor=black@0.35:x=(w-text_w)/2:y=(h-text_h)/2:enable='between(t,$T2,$DUR)':alpha='if(lt(t,$T2+0.2),min(1,(t-$T2)/0.2),if(gt(t,$DUR-0.2),max(0,($DUR-t)/0.2),1))'[v]" \
   -map "[v]" -map 0:a -c:v libx264 -pix_fmt yuv420p -c:a aac -b:a 192k -shortest "$OUT"
 
 echo "✅ 完成: $OUT"
