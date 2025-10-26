@@ -117,33 +117,33 @@ This project also includes a VOICEVOX integration script for high-quality Japane
 
 | Speaker Name           | Speaker ID |
 | :--------------------- | :--------: |
-| 四国めたん（ノーマル） |     0      |
-| 四国めたん（あまあま） |     1      |
-| ずんだもん（ノーマル） |     2      |
-| ずんだもん（あまあま） |     3      |
-| ずんだもん（ツンツン） |     4      |
-| ずんだもん（セクシー） |     5      |
-| 春日部つむぎ           |     6      |
-| 雨晴はう               |     7      |
-| 波音リツ               |     8      |
-| 玄野武宏               |     9      |
-| 白上虎太郎             |     10     |
-| 青山龍星               |     11     |
-| 冥鳴ひまり             |     12     |
-| 九州そら（ノーマル）   |     16     |
-| 九州そら（セクシー）   |     17     |
-| 九州そら（ツンツン）   |     18     |
+| Shikoku Metan (Normal) |     0      |
+| Shikoku Metan (Sweet)  |     1      |
+| Zundamon (Normal)      |     2      |
+| Zundamon (Sweet)       |     3      |
+| Zundamon (Tsuntsun)    |     4      |
+| Zundamon (Sexy)        |     5      |
+| Kasukabe Tsumugi       |     6      |
+| Amami Haru             |     7      |
+| Namine Ritsu           |     8      |
+| Genno Takehiro         |     9      |
+| Shirakami Kotaro       |     10     |
+| Aoyama Ryusei          |     11     |
+| Meimei Himari          |     12     |
+| Kyushu Sora (Normal)   |     16     |
+| Kyushu Sora (Sexy)     |     17     |
+| Kyushu Sora (Tsuntsun) |     18     |
 
 #### Examples
 
 ```bash
-# ずんだもん ノーマル
+# Zundamon (Normal)
 ./voicevox_say.sh "おはよう！今日もがんばるのだ！" 2
 
-# 四国めたん（あまあま）
+# Shikoku Metan (Sweet)
 ./voicevox_say.sh "めたんだよ～" 1
 
-# 九州そら（セクシー）
+# Kyushu Sora (Sexy)
 ./voicevox_say.sh "こんにちは、九州そらです。" 17
 ```
 
