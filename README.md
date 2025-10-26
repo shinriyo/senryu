@@ -87,6 +87,74 @@ The script generates:
 - **Audio issues**: Check that `say` command works: `say "test"`
 - **Video issues**: Ensure ffmpeg is installed: `ffmpeg -version`
 
+## Additional Scripts
+
+### VOICEVOX Integration (`voicevox_say.sh`)
+
+This project also includes a VOICEVOX integration script for high-quality Japanese text-to-speech synthesis.
+
+#### Requirements
+
+- VOICEVOX Engine running on localhost:50021
+- `jq` command-line JSON processor (install with `brew install jq`)
+- `curl` for API communication
+- `afplay` for audio playback (macOS built-in)
+
+#### Usage
+
+```bash
+# Basic usage (defaults to ずんだもん speaker=2)
+./voicevox_say.sh "おはよう！今日もがんばるのだ！"
+
+# Specify speaker by ID
+./voicevox_say.sh "ずんだもんはツンツンしてるぞ" 4
+
+# Specify speaker with parameter name
+./voicevox_say.sh "めたんだよ～" speaker=1
+```
+
+#### Available Speakers
+
+| Speaker Name           | Speaker ID |
+| :--------------------- | :--------: |
+| 四国めたん（ノーマル） |     0      |
+| 四国めたん（あまあま） |     1      |
+| ずんだもん（ノーマル） |     2      |
+| ずんだもん（あまあま） |     3      |
+| ずんだもん（ツンツン） |     4      |
+| ずんだもん（セクシー） |     5      |
+| 春日部つむぎ           |     6      |
+| 雨晴はう               |     7      |
+| 波音リツ               |     8      |
+| 玄野武宏               |     9      |
+| 白上虎太郎             |     10     |
+| 青山龍星               |     11     |
+| 冥鳴ひまり             |     12     |
+| 九州そら（ノーマル）   |     16     |
+| 九州そら（セクシー）   |     17     |
+| 九州そら（ツンツン）   |     18     |
+
+#### Examples
+
+```bash
+# ずんだもん ノーマル
+./voicevox_say.sh "おはよう！今日もがんばるのだ！" 2
+
+# 四国めたん（あまあま）
+./voicevox_say.sh "めたんだよ～" 1
+
+# 九州そら（セクシー）
+./voicevox_say.sh "こんにちは、九州そらです。" 17
+```
+
+#### Output
+
+The script generates:
+
+- `query.json` - Audio query parameters
+- `voice.wav` - Generated audio file
+- Plays audio automatically using `afplay`
+
 ## License
 
 This project is open source. Feel free to modify and distribute.
