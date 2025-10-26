@@ -106,10 +106,20 @@ See the [VOICEVOX Integration section](#voicevox-integration-voicevox_saysh) for
 
 The script generates:
 
-- `1.aiff` - Raw audio file
-- `1.mp3` - Processed audio file
-- `silences.log` - Silence detection log
 - `[output].mp4` - Final video with text overlay
+
+### Temporary Files (in `tmp/` directory)
+
+The script creates temporary files during processing:
+
+- `tmp/1.aiff` - Raw audio file (say engine only)
+- `tmp/query_*.json` - VOICEVOX query files (voicevox engine only)
+- `tmp/voice_*.wav` - Individual phrase audio files (voicevox engine only)
+- `tmp/temp.wav` - Combined audio file (voicevox engine only)
+- `tmp/silences.log` - Silence detection log
+- `1.mp3` - Final processed audio file (root directory)
+
+**Note**: Temporary files are stored in the `tmp/` directory and can be cleaned up after processing. The `tmp/` directory is included in `.gitignore` to keep the repository clean.
 
 ## Troubleshooting
 
