@@ -116,7 +116,7 @@ PY
 echo "⏱  DUR=$DUR  T1=$T1  T2=$T2"
 
 # --- テキスト焼き込み（ASS不要・drawtext） ---
-FONT="Hiragino Sans"   # mac標準フォント名
+FONT="YuMincho"   # 川柳らしい明朝体フォント
 SIZE=72
 
 # コロンをエスケープ（drawtextの区切り対策）
